@@ -49,20 +49,20 @@ class Collapser extends React.Component {
 
 		this.state = {
 			transitionState: TransitionState.None,
-			startTime: 0
+            startTime: 0,
+            collapsed: props.collapsed
 		};
 
 		this.contentRef = React.createRef();
-	}
-
-	componentWillReceiveProps(props) {
-		if (props.collapsed !== this.props.collapsed) {
-			this.setState({
-				transitionState: TransitionState.Initial,
-				startTime: Date.now()
-			});
-		}
-	}
+    }
+    
+    static getDerivedStateFromProps(props, state) {
+        return props.collapsed === state.collapsed ? null : {
+            transitionState: TransitionState.Initial,
+            startTime: Date.now(),
+            collapsed: props.collapsed
+        };
+    }
 
 	componentDidMount() {
 		this.measureContentHeight();
@@ -71,7 +71,7 @@ class Collapser extends React.Component {
 	componentDidUpdate() {
 		this.measureContentHeight();
 		if (this.state.transitionState === TransitionState.Initial) {
-			// Ensure next render() call not to be done in the current frame
+			// Ensure next render() won't be called in the current frame
 			setTimeout(() => {
 				delete this.timeoutId;
 				this.setState({transitionState: TransitionState.Processing});
@@ -91,8 +91,8 @@ class Collapser extends React.Component {
 	}
 
 	render() {
-		const {transitionState} = this.state;
-		const {duration, easing, collapsed, collapsedHeight, hasCropper} = this.props;
+		const {transitionState, collapsed} = this.state;
+		const {duration, easing, collapsedHeight, hasCropper} = this.props;
         const crop = collapsedHeight && collapsed && transitionState === TransitionState.None;
         const transition = duration + 'ms ' + easing;
 		
