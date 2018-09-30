@@ -1,6 +1,6 @@
 {
   "name": "react-styled-collapser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React component for sliding up and down it's content",
   "main": "lib/index.js",
   "scripts": {
